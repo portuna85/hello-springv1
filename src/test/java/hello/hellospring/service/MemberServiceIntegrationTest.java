@@ -1,4 +1,5 @@
 package hello.hellospring.service;
+
 import hello.hellospring.domain.Member;
 import hello.hellospring.repository.MemberRepository;
 import org.junit.jupiter.api.Test;
@@ -14,49 +15,40 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 @Transactional
 class MemberServiceIntegrationTest {
 
-    @Autowired MemberService memberService;
-    @Autowired MemberRepository memberRepository;
+    @Autowired
+    MemberService memberService;
+
+    @Autowired
+    MemberRepository memberRepository;
 
     @Test
-    void 회원가입() {
-        // given
+    public void 회원가입() throws Exception {
+
+        // Given
         Member member = new Member();
         member.setName("hello");
 
-        // when
+        // When
         Long saveId = memberService.join(member);
 
-        // then
+        // Then
         Member findMember = memberRepository.findById(saveId).get();
         assertEquals(member.getName(), findMember.getName());
     }
 
     @Test
-    void 중복_회원_예외() throws Exception {
-        // given
+    public void 중복_회원_예외() throws Exception {
+
+        // Given
         Member member1 = new Member();
-        member1.setName("Spring1");
-
+        member1.setName("spring");
         Member member2 = new Member();
-        member2.setName("Spring1");
+        member2.setName("spring");
 
-        // when
+        // When
         memberService.join(member1);
-        IllegalStateException e = assertThrows(IllegalStateException.class, () -> memberService.join(member2));
-
+        IllegalStateException e = assertThrows(IllegalStateException.class,
+                () -> memberService.join(member2));//예외가 발생해야 한다.
         assertThat(e.getMessage()).isEqualTo("이미 존재하는 회원입니다.");
-
-        /*
-        try {
-            memberService.join(member2);
-            fail("예외가 발생해야 합니다.");
-        } catch (IllegalStateException e) {
-            assertThat(e.getMessage()).isEqualTo("이미 존재하는 회원입니다.");
-        }
-        */
-
-        // then
-
-
     }
 }
