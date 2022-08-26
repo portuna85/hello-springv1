@@ -16,21 +16,28 @@ public class JpaMemberRepository implements MemberRepository {
 
     @Override
     public Member save(Member member) {
-        return null;
+        em.persist(member);
+        return member;
     }
 
     @Override
     public Optional<Member> findById(Long id) {
-        return Optional.empty();
+        Member member = em.find(Member.class, id);
+        return Optional.ofNullable(member);
     }
 
     @Override
     public Optional<Member> findByName(String name) {
-        return Optional.empty();
+        return em.createQuery("SELECT m FROM Member m where m.name = :name", Member.class)
+                 .setParameter("name", name)
+                 .getResultList()
+                 .stream()
+                 .findAny();
     }
 
     @Override
     public List<Member> findAll() {
-        return null;
+        return em.createQuery("SELECT m FROM Member m", Member.class)
+                 .getResultList();
     }
 }
