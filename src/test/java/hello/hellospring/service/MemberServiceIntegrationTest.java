@@ -38,7 +38,7 @@ class MemberServiceIntegrationTest {
     }
 
     @Test
-    public void 중복_회원_예외() throws Exception {
+    void 중복_회원_예외() throws Exception {
         // given
         Member member1 = new Member();
         member1.setName("Spring1");
